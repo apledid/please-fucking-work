@@ -1,27 +1,28 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export default function UserPage({ params }: { params: { user: string } }) {
-  const [desc, setDesc] = useState("No description yet")
+  const [desc, setDesc] = useState("")
+  const [loaded, setLoaded] = useState(false)
 
-  const save = () => {
-    alert("Saved (DB will come next step)")
-  }
+  useEffect(() => {
+    fetch(`/api/user?username=${encodeURIComponent(params.user)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data?.description) setDesc(data.description)
+      })
+      .catch(() => {})
+      .finally(() => setLoaded(true))
+  }, [params.user])
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center gap-4">
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center gap-4 px-6">
       <h1 className="text-5xl font-bold">{params.user}</h1>
 
-      <textarea
-        className="text-black p-2 w-80 h-32"
-        value={desc}
-        onChange={e => setDesc(e.target.value)}
-      />
-
-      <button onClick={save} className="px-4 py-2 bg-white text-black">
-        Save Description
-      </button>
+      <p className="max-w-xl text-center text-white/80 whitespace-pre-wrap">
+        {loaded ? (desc || "No description yet") : ""}
+      </p>
     </div>
   )
 }
