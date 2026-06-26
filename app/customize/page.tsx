@@ -36,8 +36,4 @@ export default function CustomizePage() {
       </button>
     </main>
   )
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> a1a714965c8be1e716b7ca28c55033d9dc7b010d
